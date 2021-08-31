@@ -7,21 +7,26 @@ import { splitEmail } from "./utils";
 // For uploading a file you need to first request an S3 path from server, after that push the file to S3 using
 // the given path and then notify server again if the upload was succeesfull or not
 
+interface S3Data {
+  fileId: string;
+  s3Path: string;
+}
+
 let s3Client: {
   uploadFile: (s3Path: string, file: File) => Promise<void>;
 };
 let serverApi: {
-  prepareForUpload: (file: File) => Promise<{ fileId: string; s3Path: string }>;
+  prepareForUpload: (file: File) => Promise<S3Data>;
   markAsSucceeded: (fileId: string) => Promise<void>;
   markAsFailed: (fileId: string) => Promise<void>;
 };
 
-const getServerData = (file: File) => {
+const getServerData = (file: File): Promise<S3Data> => {
   return serverApi.prepareForUpload(file);
 };
 
 // If there is fileId it will mark upload as succeesful
-const checkUploadedFile = (fileId: string) => {
+const checkUploadedFile = (fileId: string): void => {
   fileId ? serverApi.markAsSucceeded(fileId) : serverApi.markAsFailed(fileId);
 };
 
