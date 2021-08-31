@@ -1,0 +1,15 @@
+<Search />  —> (and add hook useDebounce inside Search component)
+<Filter /> 
+<Table />
+<TableHeader />
+<TableRow />
+<TableRowOpen />
+<TableCell />
+<TableCellName /> (avatar + text)
+<RowProfileData /> (Company profile)
+<RowColumnData /> (Industry / sector or Labels)
+<MenuIcon /> (three dots)
+<Chip />
+<IconButton /> (In this case arrow) 
+<AddButton /> (add company)
+<Button /> (rectangle style like open profile)
