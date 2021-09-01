@@ -25,16 +25,18 @@ const getServerData = (file: File): Promise<S3Data> => {
   return serverApi.prepareForUpload(file);
 };
 
-// If there is fileId it will mark upload as succeesful
-const checkUploadedFile = (fileId: string): void => {
-  fileId ? serverApi.markAsSucceeded(fileId) : serverApi.markAsFailed(fileId);
-};
-
 async function uploadFiles(files: File[]): Promise<void> {
   files.forEach(async (file: File) => {
-    const serverData = await getServerData(file);
-    s3Client.uploadFile(serverData.s3Path, file);
-    checkUploadedFile(serverData.fileId);
+    await getServerData(file).then((data: S3Data) => {
+      s3Client
+        .uploadFile(data.s3Path, file)
+        .then(() => {
+          serverApi.markAsSucceeded(data.fileId);
+        })
+        .catch(() => {
+          serverApi.markAsFailed(data.fileId);
+        });
+    });
   });
 
   // Implement this method
